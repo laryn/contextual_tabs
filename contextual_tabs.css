@@ -16,3 +16,8 @@
 #contextual-tabs .item-list ul > li {
   margin-left: 0;
 }
+
+#contextual-tabs .dropdown-menu {
+  left: auto;
+  right: 0;
+}
