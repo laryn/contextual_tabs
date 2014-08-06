@@ -41,13 +41,6 @@ function contextual_tabs_config_form($form, &$form_state) {
     '#description' => t('List of tab captions to extract as buttons, one per line.  Case in-sensitive.<br>Can begin with an optional URL path filter followed by a colon.  Example:  "user:Shortcuts" would only extract the "Shortcuts" tab from the /user page.<br>To rename a tab, place the new caption after the normal caption separated by | character.  For example: View|Cancel would change the View tab to a Cancel button.<br>To add an icon, separate the icon name from the caption with a comma.  For example: Edit,icon_pencil'),
   );
 
-  $form['contextual_tabs']['contextual_tabs_visilibity'] = array(
-    '#title' => t('Visibility widget'),
-    '#type' => 'checkbox',
-    '#default_value' => variable_get('contextual_tabs_visilibity', TRUE),
-    '#description' => t('Show the Content Visibility widget as a button.'),
-  );
-
   return system_settings_form($form);
 }
 
