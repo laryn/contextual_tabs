@@ -60,6 +60,9 @@ function contextual_tabs_theme() {
   );
 }
 
+/**
+ * Helper function to create links for the normal tabs
+ */
 function _contextual_tabs_links($new_tabs_links = array()) {
   static $tabs_links = NULL;
   if (!isset($tabs_links)) {
@@ -75,6 +78,9 @@ function _contextual_tabs_links($new_tabs_links = array()) {
   return $tabs_links;
 }
 
+/**
+ * Implements hook_preprocess_page().
+ */
 function contextual_tabs_preprocess_page(&$variables) {
   $pages = variable_get('contextual_tabs_pages', '');
   $current = current_path();
@@ -139,6 +145,13 @@ function contextual_tabs_preprocess_page(&$variables) {
       'title' => t('Configure'),
       'buttons' => $data['buttons'],
     );
+
+    // remove links with empty data
+    foreach ($data['links'] as $key => $value) {
+      if (isset($value['data']) && empty($value['data'])) {
+        unset($data['links'][$key]);
+      }
+    }
 
     if (!empty($data['links'])) {
       $build['links'] = theme('item_list', array(
