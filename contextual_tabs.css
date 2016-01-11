@@ -1,6 +1,12 @@
 #contextual-tabs {
   float: right;
   margin-top: 23px;
+  z-index: 100;
+  position: relative;
+}
+
+.pane-contextual-tabs #contextual-tabs {
+  margin-top: 5px;
 }
 
 #contextual-tabs > li {

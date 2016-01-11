@@ -22,6 +22,13 @@ function contextual_tabs_menu() {
 }
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function contextual_tabs_ctools_plugin_directory($module, $plugin) {
+  return 'plugins/' . $plugin;
+}
+
+/**
  * Configuration Form for Open Atrium
  */
 function contextual_tabs_config_form($form, &$form_state) {
@@ -79,11 +86,12 @@ function _contextual_tabs_links($new_tabs_links = array()) {
 }
 
 /**
- * Implements hook_preprocess_page().
+ * Render the contextual tab buttons
  */
-function contextual_tabs_preprocess_page(&$variables) {
+function contextual_tabs_render() {
   $pages = variable_get('contextual_tabs_pages', '');
   $current = current_path();
+  $output = '';
   if (!drupal_match_path($current, $pages)) {
     $tabs_links = _contextual_tabs_links();
     $current_link = NULL;
@@ -159,8 +167,29 @@ function contextual_tabs_preprocess_page(&$variables) {
         'type' => 'ul',
       ));
     }
-    unset($variables['tabs']['#primary']);
-    $variables['primarytabs'] = theme('contextual_tabs', $build);
+
+    $output = theme('contextual_tabs', $build);
   }
+  return $output;
 }
 
+/**
+ * Implements hook_preprocess_page().
+ */
+function contextual_tabs_preprocess_page(&$variables) {
+  $tabs = contextual_tabs_render();
+  unset($variables['tabs']['#primary']);
+  $variables['primarytabs'] = $tabs;
+}
+
+/**
+ * Implements hook_preprocess_pane_ID().
+ * @param $vars
+ *
+ * This supports the message pane in Panels Everywhere
+ * where preprocess_page is not called.
+ */
+function contextual_tabs_preprocess_pane_messages(&$vars) {
+  // Remove primary tabs from messages.  Add contextual_tabs pane to the page instead.
+  unset($vars['tabs']['#primary']);
+}
