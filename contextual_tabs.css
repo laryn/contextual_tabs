@@ -5,10 +5,6 @@
   position: relative;
 }
 
-.pane-contextual-tabs #contextual-tabs {
-  margin-top: 5px;
-}
-
 #contextual-tabs > li {
   display: inline-block;
 }
