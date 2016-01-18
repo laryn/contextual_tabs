@@ -1,4 +1,10 @@
 #contextual-tabs {
+  margin-top: 5px;
+  z-index: 100;
+  position: relative;
+}
+
+#main #contextual-tabs {
   float: right;
   margin-top: 23px;
   z-index: 100;

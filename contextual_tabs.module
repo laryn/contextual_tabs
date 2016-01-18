@@ -181,15 +181,3 @@ function contextual_tabs_preprocess_page(&$variables) {
   unset($variables['tabs']['#primary']);
   $variables['primarytabs'] = $tabs;
 }
-
-/**
- * Implements hook_preprocess_pane_ID().
- * @param $vars
- *
- * This supports the message pane in Panels Everywhere
- * where preprocess_page is not called.
- */
-function contextual_tabs_preprocess_pane_messages(&$vars) {
-  // Remove primary tabs from messages.  Add contextual_tabs pane to the page instead.
-  unset($vars['tabs']['#primary']);
-}
