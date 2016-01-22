@@ -25,7 +25,16 @@
   margin-left: 0;
 }
 
+#contextual-tabs li a.btn-sm > i {
+  font-size: 16px;
+}
+
 #contextual-tabs .dropdown-menu {
   left: auto;
   right: 0;
+  margin-bottom: 0;
+}
+
+#contextual-tabs .align-right li {
+  text-align: right;
 }

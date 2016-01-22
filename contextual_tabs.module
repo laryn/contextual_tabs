@@ -88,7 +88,7 @@ function _contextual_tabs_links($new_tabs_links = array()) {
 /**
  * Render the contextual tab buttons
  */
-function contextual_tabs_render() {
+function contextual_tabs_render($conf = array()) {
   $pages = variable_get('contextual_tabs_pages', '');
   $current = current_path();
   $output = '';
@@ -149,9 +149,15 @@ function contextual_tabs_render() {
       );
     drupal_alter('contextual_tabs', $data);
 
-    $build = array(
+    $vars = array(
       'title' => t('Configure'),
       'buttons' => $data['buttons'],
+      'alignment' => !empty($conf['alignment']) ? 'align-right' : '',
+      'show_captions' => !empty($conf['hide_captions']) ? FALSE : TRUE,
+      'direction' => !empty($conf['direction']) ? '' : 'dropup',
+      'menu_caption' => !empty($conf['menu_caption']) ? $conf['menu_caption'] : t('Configure'),
+      'icon_class' => !empty($conf['icon_class']) ? $conf['icon_class'] : 'icon-cog',
+      'btn_class' => $conf['btn_class'],
     );
 
     // remove links with empty data
@@ -162,13 +168,13 @@ function contextual_tabs_render() {
     }
 
     if (!empty($data['links'])) {
-      $build['links'] = theme('item_list', array(
+      $vars['links'] = theme('item_list', array(
         'items' => $data['links'],
         'type' => 'ul',
       ));
     }
 
-    $output = theme('contextual_tabs', $build);
+    $output = theme('contextual_tabs', $vars);
   }
   return $output;
 }
