@@ -129,6 +129,7 @@ function contextual_tabs_render($conf = array()) {
       $caption = strtolower(trim($caption));
       $url = trim($url);
       if (!in_array($caption, $processed) && isset($link_by_name[$caption]) &&
+        (!empty($icon) || empty($conf['hide_captions'])) &&
         (empty($url) || drupal_match_path($current, $url))) {
         $id = $link_by_name[$caption];
         $key = 'link-' . $id;
@@ -147,7 +148,12 @@ function contextual_tabs_render($conf = array()) {
       'buttons' => $buttons,
       'links' => $links,
       );
+
     drupal_alter('contextual_tabs', $data);
+
+    if (!empty($conf['prevent_alter'])) {
+      $data['buttons'] = $buttons;
+    }
 
     $vars = array(
       'title' => t('Configure'),

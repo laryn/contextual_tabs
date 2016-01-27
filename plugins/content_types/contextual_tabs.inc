@@ -20,6 +20,7 @@ $plugin = array(
     'menu_caption' => t('Configure'),
     'icon_class' => 'icon-cog',
     'btn_class' => '',
+    'prevent_alter' => FALSE,
   ),
 );
 
@@ -87,6 +88,11 @@ function contextual_tabs_settings_edit_form($form, &$form_state) {
     '#title' => t('Button classes'),
     '#description' => t('CSS classes to add to buttons.  Leave blank for default small buttons.'),
     '#default_value' => !empty($conf['btn_class']) ? $conf['btn_class'] : '',
+  );
+  $form['prevent_alter'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Prevent buttons added from other modules'),
+    '#default_value' => (isset($conf['prevent_alter'])) ? $conf['prevent_alter'] : FALSE,
   );
 
   return $form;
