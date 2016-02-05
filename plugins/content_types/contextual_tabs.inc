@@ -29,7 +29,7 @@ $plugin = array(
  */
 function contextual_tabs_contextual_tabs_content_type_render($subtype, $conf, $panel_messagesrgs) {
   $block = new stdClass();
-  $conf['btn_class'] = !empty($conf['btn_class']) ? $conf['btn_class'] : 'btn-small btn-sm btn-default';
+  $conf['btn_class'] = !empty($conf['btn_class']) ? check_plain($conf['btn_class']) : 'btn-small btn-sm btn-default';
   $block->content = contextual_tabs_render($conf);
   return $block;
 }

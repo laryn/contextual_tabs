@@ -161,9 +161,9 @@ function contextual_tabs_render($conf = array()) {
       'alignment' => !empty($conf['alignment']) ? 'align-right' : '',
       'show_captions' => !empty($conf['hide_captions']) ? FALSE : TRUE,
       'direction' => !empty($conf['direction']) ? 'dropup' : '',
-      'menu_caption' => !empty($conf['menu_caption']) ? $conf['menu_caption'] : t('Configure'),
-      'icon_class' => !empty($conf['icon_class']) ? $conf['icon_class'] : 'icon-cog',
-      'btn_class' => !empty($conf['btn_class']) ? $conf['btn_class'] : 'btn-small btn-sm btn-default',
+      'menu_caption' => !empty($conf['menu_caption']) ? check_plain($conf['menu_caption']) : t('Configure'),
+      'icon_class' => !empty($conf['icon_class']) ? check_plain($conf['icon_class']) : 'icon-cog',
+      'btn_class' => !empty($conf['btn_class']) ? check_plain($conf['btn_class']) : 'btn-small btn-sm btn-default',
     );
 
     // remove links with empty data
