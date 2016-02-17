@@ -82,6 +82,7 @@ function _contextual_tabs_links($new_tabs_links = array()) {
   if (count($new_tabs_links)) {
     $tabs_links = $new_tabs_links;
   }
+  drupal_alter('contextual_tabs_tasks', $tabs_links);
   return $tabs_links;
 }
 
