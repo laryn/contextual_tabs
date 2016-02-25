@@ -10,10 +10,12 @@
   <?php if (!empty($button['link'])): ?>
   <li>
     <a class="btn <?php print $btn_class; ?>" href="<?php print $button['link'];?>" title="<?php print $button['title'];?>">
-      <i class="<?php print $button['icon'];?>"></i>
-        <?php if ($show_captions): ?>
-          &nbsp;<?php print $button['title'];?>
-        <?php endif; ?>
+      <?php if (!empty($button['icon'])): ?>
+        <i class="<?php print $button['icon'];?>"></i>
+      <?php endif; ?>
+      <?php if ($show_captions): ?>
+        &nbsp;<?php print $button['title'];?>
+      <?php endif; ?>
     </a>
   </li>
   <?php elseif (!empty($button['render'])): ?>

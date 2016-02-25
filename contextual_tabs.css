@@ -21,6 +21,10 @@
   width: 0;
 }
 
+#contextual-tabs .btn {
+  min-height: 31px;
+}
+
 #contextual-tabs .item-list ul > li {
   margin-left: 0;
 }
