@@ -25,6 +25,10 @@
   min-height: 31px;
 }
 
+#contextual-tabs .btn i {
+  line-height: normal;
+}
+
 #contextual-tabs .item-list ul > li {
   margin-left: 0;
 }
