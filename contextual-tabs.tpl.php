@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Provides view for contexual tabs.
+ * Provides view for contextual tabs.
  *
  */
 ?>

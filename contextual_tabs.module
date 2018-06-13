@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Moves the backdrop primary tabs into a contextual popup menu
+ * Moves the Backdrop primary tabs into a contextual popup menu block
  * Inspired from sandbox https://drupal.org/sandbox/onkeltem/1730244
  */
 
@@ -22,20 +22,27 @@ function contextual_tabs_menu() {
 }
 
 /**
- * Load the .inc file.
+ * Implements hook_autoload_info().
  */
-module_load_include('inc', 'contextual_tabs', 'contextual_tabs');
-
-
-
-/**
- * Implements hook_ctools_plugin_directory().
-
-function contextual_tabs_ctools_plugin_directory($module, $plugin) {
-  return 'plugins/' . $plugin;
+function contextual_tabs_autoload_info() {
+  return array(
+    'ContextualTabs' => 'contextual_tabs.inc',
+  );
 }
 
+/**
+ * Implements hook_block_info().
  */
+function contextual_tabs_block_info() {
+  $blocks['contextual_tabs_block'] = array(
+    // info: The name of the block.
+    'info' => t('Contextual tabs'),
+    'description' => 'Display administrative tabs in contextual form.',
+    'class' => 'ContextualTabs',
+  );
+
+  return $blocks;
+}
 
 /**
  * Implements hook_config_info().
