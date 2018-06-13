@@ -22,7 +22,7 @@ class ContextualTabs extends Block {
    *  Sets title text on draggable block panel in Layout builder.
    */
   function getAdminTitle() {
-    return !empty($this->settings['title']) ? check_plain($this->settings['title']) : t('Contextual tab buttons');
+    return (isset($this->settings['title']) && $this->settings['title'] != '') ? check_plain($this->settings['title']) : t('Contextual tab buttons');
   }
 
   /**
@@ -38,16 +38,16 @@ class ContextualTabs extends Block {
    * @return string
    */
   function getContent() {
-    //TODO: figure out where $conf is supposed to come frome
-    $conf['btn_class'] = !empty($conf['btn_class']) ? check_plain($conf['btn_class']) : 'btn-small btn-sm btn-default';
-    return contextual_tabs_render($conf);
+    $this->settings['btn_class'] = !empty($this->settings['btn_class']) ? check_plain($this->settings['btn_class']) : 'btn-small btn-sm btn-default';
+    $this->settings['content'] = contextual_tabs_render($this->settings);
+    return $this->settings['content'];
   }
 
   /**
    * Returns a preview for this block.
    */
   function getAdminPreview() {
-    return t('Displays the contextual tab buttons.');
+    return t('Displays admin tabs as a contextual menu.');
   }
 
   /**
@@ -56,7 +56,7 @@ class ContextualTabs extends Block {
   function form(&$form, &$form_state) {
     parent::form($form, $form_state);
 
-    $conf = $form_state['conf'];
+    $conf = $this->settings;
     $form['hide_captions'] = array(
       '#type' => 'checkbox',
       '#title' => t('Hide button captions'),
@@ -106,17 +106,11 @@ class ContextualTabs extends Block {
       '#default_value' => (isset($conf['prevent_alter'])) ? $conf['prevent_alter'] : FALSE,
     );
 
-    // Hide the title display, as contextual tab blocks don't have "default" title
-    // from which they would inherit, so it's either a custom title or no title.
+    // Hide the title options, as contextual tab blocks don't have titles.
     $form['title_display']['title_display']['#access'] = FALSE;
+    $form['title_display']['title']['#access'] = FALSE;
 
-    $form['title_display']['title'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Display title'),
-      '#default_value' => $this->settings['title'],
-      '#maxlength' => 255,
-    );
-      $form['convert']['label'] = array(
+    $form['convert']['label'] = array(
         '#type' => 'textfield',
         '#title' => t('Admin label'),
         '#maxlength' => 64,
@@ -181,23 +175,16 @@ class ContextualTabs extends Block {
   function formSubmit($form, &$form_state) {
     parent::formSubmit($form, $form_state);
 
-    if (module_exists('block') && $form_state['values']['reusable']) {
-      $delta = $form_state['values']['delta'];
-      $this->settings = array_diff_key($this->settings, array('title' => '', 'content' => '', 'format' => ''));
-      $this->plugin = 'block:' . $delta;
-
-      $edit = array(
-        'info' => $form_state['values']['label'],
-        'title' => $form_state['values']['title'],
-        'description' => $form_state['values']['description'],
-        'body' => $form_state['values']['content'],
-      );
-      block_custom_block_save($edit, $delta);
-    }
-    else {
-      $this->settings['title'] = $form_state['values']['title'];
-      $this->settings['content'] = $form_state['values']['content']['value'];
-      $this->settings['format'] = $form_state['values']['content']['format'];
-    }
+    $this->settings['info'] = $form_state['values']['label'];
+    $this->settings['title'] = $form_state['values']['title'];
+    $this->settings['description'] = $form_state['values']['description'];
+    $this->settings['body'] = $form_state['values']['content'];
+    $this->settings['hide_captions'] = $form_state['values']['hide_captions'];
+    $this->settings['direction'] = $form_state['values']['direction'];
+    $this->settings['alignment'] = $form_state['values']['alignment'];
+    $this->settings['menu_caption'] = $form_state['values']['menu_caption'];
+    $this->settings['icon_class'] = $form_state['values']['icon_class'];
+    $this->settings['btn_class'] = $form_state['values']['btn_class'];
+    $this->settings['prevent_alter'] = $form_state['values']['prevent_alter'];
   }
 }

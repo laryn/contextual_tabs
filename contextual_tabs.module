@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Moves the Backdrop primary tabs into a contextual popup menu block
+ * Moves the backdrop primary tabs into a contextual popup menu
  * Inspired from sandbox https://drupal.org/sandbox/onkeltem/1730244
  */
 
@@ -209,7 +209,6 @@ function contextual_tabs_render($conf = array()) {
         'type' => 'ul',
       ));
     }
-
     $output = theme('contextual_tabs', $vars);
   }
   return $output;
