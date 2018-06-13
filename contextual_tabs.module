@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Moves the drupal primary tabs into a contextual popup menu
+ * Moves the backdrop primary tabs into a contextual popup menu
  * Inspired from sandbox https://drupal.org/sandbox/onkeltem/1730244
  */
 
 /**
- * Implementations hook_menu().
+ * Implements hook_menu().
  */
 function contextual_tabs_menu() {
   $items['admin/config/user-interface/contextual-tabs'] = array(
     'title' => 'Contextual Tabs',
     'description' => 'Configuration for Contextual Tabs',
     'weight' => 0,
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('contextual_tabs_config_form'),
     'access arguments' => array('administer site configuration'),
   );
@@ -22,29 +22,50 @@ function contextual_tabs_menu() {
 }
 
 /**
- * Implements hook_ctools_plugin_directory().
+ * Load the .inc file.
  */
+module_load_include('inc', 'contextual_tabs', 'contextual_tabs');
+
+
+
+/**
+ * Implements hook_ctools_plugin_directory().
+
 function contextual_tabs_ctools_plugin_directory($module, $plugin) {
   return 'plugins/' . $plugin;
+}
+
+ */
+
+/**
+ * Implements hook_config_info().
+ */
+function contextual_tabs_config_info() {
+  $prefixes['contextual_tabs.settings'] = array(
+    'label' => t('Module name settings'),
+    'group' => t('Configuration'),
+  );
 }
 
 /**
  * Configuration Form for Open Atrium
  */
 function contextual_tabs_config_form($form, &$form_state) {
+  $config = config('contextual_tabs.settings');
   $form = array();
+  $form['#config'] = 'contextual_tabs.settings';
 
   $form['contextual_tabs']['contextual_tabs_pages'] = array(
     '#title' => t('URLs to ignore'),
     '#type' => 'textarea',
-    '#default_value' => variable_get('contextual_tabs_pages', ''),
+    '#default_value' => $config->get('contextual_tabs_pages'),
     '#description' => t('List of URL patterns to be ignored.  One per line.'),
   );
 
   $form['contextual_tabs']['contextual_tabs_extract'] = array(
     '#title' => t('Tabs to extract'),
     '#type' => 'textarea',
-    '#default_value' => variable_get('contextual_tabs_extract', ''),
+    '#default_value' => $config->get('contextual_tabs_extract'),
     '#description' => t('List of tab captions to extract as buttons, one per line.  Case in-sensitive.<br>Can begin with an optional URL path filter followed by a colon.  Example:  "user:Shortcuts" would only extract the "Shortcuts" tab from the /user page.<br>To rename a tab, place the new caption after the normal caption separated by | character.  For example: View|Cancel would change the View tab to a Cancel button.<br>To add an icon, separate the icon name from the caption with a comma.  For example: Edit,icon_pencil'),
   );
 
@@ -52,17 +73,17 @@ function contextual_tabs_config_form($form, &$form_state) {
 }
 
 /**
- * Implements hook_theme()
+ * Implements hook_theme().
  */
 function contextual_tabs_theme() {
   return array(
     'contextual_tabs' => array(
-      'template'  => 'contextual-tabs',
+      'template' => 'contextual-tabs',
       'arguments' => array(
         'public' => NULL,
-        'links'  => array(),
+        'links' => array(),
       ),
-      'path' => drupal_get_path('module', 'contextual_tabs'),
+      'path' => backdrop_get_path('module', 'contextual_tabs'),
     ),
   );
 }
@@ -75,14 +96,14 @@ function _contextual_tabs_links($new_tabs_links = array()) {
   if (!isset($tabs_links)) {
     $local_tasks = menu_local_tasks();
     $tabs_links = array();
-    foreach($local_tasks['tabs']['output'] as $link) {
+    foreach ($local_tasks['tabs']['output'] as $link) {
       $tabs_links[] = $link['#link'];
     }
   }
   if (count($new_tabs_links)) {
     $tabs_links = $new_tabs_links;
   }
-  drupal_alter('contextual_tabs_tasks', $tabs_links);
+  backdrop_alter('contextual_tabs_tasks', $tabs_links);
   return $tabs_links;
 }
 
@@ -90,15 +111,16 @@ function _contextual_tabs_links($new_tabs_links = array()) {
  * Render the contextual tab buttons
  */
 function contextual_tabs_render($conf = array()) {
-  $pages = variable_get('contextual_tabs_pages', '');
+  $config = config('contextual_tabs.settings');
+  $pages = $config->get('contextual_tabs_pages');
   $current = current_path();
   $output = '';
-  if (!drupal_match_path($current, $pages)) {
+  if (!backdrop_match_path($current, $pages)) {
     $tabs_links = _contextual_tabs_links();
     $current_link = NULL;
     $links = array();
     $link_by_name = array();
-    $extract = explode("\n", variable_get('contextual_tabs_extract', ''));
+    $extract = explode("\n", $config->get('contextual_tabs_extract'));
 
     foreach ($tabs_links as $id => $link) {
       if ($link['href'] != $current) {
@@ -131,7 +153,7 @@ function contextual_tabs_render($conf = array()) {
       $url = trim($url);
       if (!in_array($caption, $processed) && isset($link_by_name[$caption]) &&
         (!empty($icon) || empty($conf['hide_captions'])) &&
-        (empty($url) || drupal_match_path($current, $url))) {
+        (empty($url) || backdrop_match_path($current, $url))) {
         $id = $link_by_name[$caption];
         $key = 'link-' . $id;
         $buttons[] = array(
@@ -140,7 +162,7 @@ function contextual_tabs_render($conf = array()) {
           'icon' => isset($icon) ? $icon : '',
         );
         unset($links[$key]);
-        $processed[] = $caption;  // first match wins
+        $processed[] = $caption; // first match wins
       }
     }
 
@@ -148,9 +170,9 @@ function contextual_tabs_render($conf = array()) {
     $data = array(
       'buttons' => $buttons,
       'links' => $links,
-      );
+    );
 
-    drupal_alter('contextual_tabs', $data);
+    backdrop_alter('contextual_tabs', $data);
 
     if (!empty($conf['prevent_alter'])) {
       $data['buttons'] = $buttons;

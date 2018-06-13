@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Plugin to handle the 'contextual_tabs' pane
+ * Info hook to handle the 'contextual_tabs' pane
  */
+ 
+debug('In .inc file');
 
 $plugin = array(
   'title' => t('Contextual tab buttons'),

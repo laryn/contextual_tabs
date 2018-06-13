@@ -1,6 +1,6 @@
 name = Contextual Tabs
 description = Converts tabs to contextual links
 package = Administration
-core = 7.x
+backdrop = 1.x
 
-stylesheets[all][] = contextual_tabs.css
+stylesheets[all][] = css/contextual_tabs.css
